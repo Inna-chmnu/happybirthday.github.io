@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Святковий торт</title>
+<style>
+body {
+  margin:0;
+  height:100vh;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  font-family:Arial, sans-serif;
+  overflow:hidden;
+  background:linear-gradient(#ffe2f0,#ffd3e8);
+  flex-direction:column;
+}
+
+/* Кнопка */
+#showCakeBtn {
+  padding:15px 30px;
+  font-size:1.5rem;
+  background:#ff005d;
+  color:white;
+  border:none;
+  border-radius:10px;
+  cursor:pointer;
+  box-shadow:0 5px 15px rgba(0,0,0,0.3);
+  transition:transform 0.2s;
+}
+#showCakeBtn:hover {
+  transform:scale(1.05);
+}
+
+/* Контейнер торта */
+.cake-container {
+  position:relative;
+  width:100%;
+  max-width:450px;
+  height:600px;
+  display:none; /* ховаємо спочатку */
+  margin-top:20px;
+}
+
+/* Привітання за тортом */
+.greeting {
+  position:absolute;
+  top:50px;
+  width:100%;
+  text-align:center;
+  font-size:2.2rem;
+  font-weight:bold;
+  color:#ff005d;
+  text-shadow:0 0 15px white;
+  opacity:0;
+  z-index:1;
+  transition:opacity 1s ease;
+}
+
+/* Торт */
+.cake {
+  position:absolute;
+  bottom:0;
+  width:100%;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  z-index:2;
+}
+
+/* Шари торта */
+.layer, .cream {
+  border-radius:20px;
+  margin-bottom:12px;
+  opacity:0;
+  transform:translateY(-500px);
+  transition:transform 0.8s ease, opacity 0.5s ease;
+  box-shadow:0 5px 15px rgba(0,0,0,0.25);
+}
+.layer1 { width:360px; height:90px; background:linear-gradient(#d26a5c,#bf5242); }
+.layer2 { width:280px; height:70px; background:linear-gradient(#f3a683,#e07b56); }
+.layer3 { width:200px; height:60px; background:linear-gradient(#ffe0ac,#ffc67b); position:relative; }
+.cream { width:340px; height:30px; background:#fff3e6; }
+
+/* Глазур */
+.glaze {
+  position:absolute;
+  width:100%;
+  height:35px;
+  top:-10px;
+  left:0;
+  background:#ff6b81;
+  border-radius:20px;
+  box-shadow:inset 0 0 10px rgba(0,0,0,0.2);
+}
+.glaze::after {
+  content:"";
+  position:absolute;
+  width:100%;
+  height:15px;
+  background:#ff8aa1;
+  top:20px;
+  left:0;
+  border-radius:0 0 20px 20px;
+}
+
+/* Вишня + свічка */
+.cherry {
+  width:40px;
+  height:40px;
+  background:red;
+  border-radius:50%;
+  margin-top:-10px;
+  position:relative;
+  opacity:0;
+  transform:translateY(-500px);
+  transition:transform 0.8s ease, opacity 0.5s ease;
+  box-shadow:0 4px 8px rgba(0,0,0,0.3);
+}
+.candle {
+  width:12px;
+  height:35px;
+  background:white;
+  position:absolute;
+  left:50%;
+  top:-35px;
+  border-radius:5px;
+  transform:translateX(-50%);
+}
+.flame {
+  width:12px;
+  height:12px;
+  background:gold;
+  border-radius:50%;
+  position:absolute;
+  top:-10px;
+  left:50%;
+  transform:translateX(-50%);
+  animation:flicker 0.3s infinite;
+}
+@keyframes flicker {
+  0%,100%{ transform:scale(1); }
+  50%{ transform:scale(1.2); }
+}
+
+/* Конфетті */
+.confetti {
+  position:absolute;
+  width:6px;
+  height:10px;
+  top:-10px;
+  border-radius:50%;
+}
+</style>
+</head>
+<body>
+
+<button id="showCakeBtn">🎂 Отримати тортик 🎉</button>
+
+<div class="cake-container" id="cakeContainer">
+  <div class="greeting" id="greet">✨🎉 З Днем народження, Настя! 🎂💖</div>
+  <div class="cake">
+    <div class="cherry" id="cherry">
+      <div class="candle"></div>
+      <div class="flame"></div>
+    </div>
+    <div class="layer layer3"><div class="glaze"></div></div>
+    <div class="cream"></div>
+    <div class="layer layer2"></div>
+    <div class="cream"></div>
+    <div class="layer layer1"></div>
+  </div>
+</div>
+
+<script>
+const btn = document.getElementById('showCakeBtn');
+const cakeContainer = document.getElementById('cakeContainer');
+
+btn.addEventListener('click', () => {
+  btn.style.display = 'none'; // ховаємо кнопку
+  cakeContainer.style.display = 'block'; // показуємо торт
+
+  // Плавне з'явлення шарів
+  const elements = [
+    document.querySelector('.layer1'),
+    document.querySelectorAll('.cream')[0],
+    document.querySelector('.layer2'),
+    document.querySelectorAll('.cream')[1],
+    document.querySelector('.layer3'),
+    document.querySelector('#cherry')
+  ];
+  elements.forEach((el,i)=>{
+    setTimeout(()=>{
+      el.style.opacity=1;
+      el.style.transform='translateY(0)';
+    }, i*500);
+  });
+
+  // Показ привітання
+  setTimeout(()=>{
+    const greet = document.getElementById('greet');
+    greet.style.opacity = 1;
+  }, 2500);
+
+  // Конфетті
+  for(let i=0;i<60;i++){
+    let c = document.createElement('div');
+    c.className='confetti';
+    c.style.left=Math.random()*100+'vw';
+    c.style.background=['#ff5d8f','#ffd93d','#5dd9ff','#d95dff'][Math.floor(Math.random()*4)];
+    document.body.appendChild(c);
+    let y=Math.random()*-500;
+    let speed=2+Math.random()*3;
+    let rotation = Math.random()*360;
+    (function fall(el){
+      function anim(){
+        y+=speed;
+        rotation += 2;
+        if(y>window.innerHeight){y=-20;}
+        el.style.transform=`translateY(${y}px) rotate(${rotation}deg)`;
+        requestAnimationFrame(anim);
+      }
+      anim();
+    })(c);
+  }
+});
+</script>
+
+</body>
+</html>
